@@ -123,5 +123,8 @@ class AppSettingsPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware {
         else if (call.method == "device_settings") {
             openSettings(Settings.ACTION_SETTINGS, asAnotherTask)
         }
+        else if (call.method == "system_alert_settings") {
+            openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, asAnotherTask)
+        }
     }
 }
