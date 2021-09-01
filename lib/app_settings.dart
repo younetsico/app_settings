@@ -141,6 +141,7 @@ class AppSettings {
     });
   }
 
+  /// Android only
   static Future<void> openSystemAlertSettings({
     bool asAnotherTask = false,
   }) async {

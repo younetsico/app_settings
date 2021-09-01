@@ -20,9 +20,9 @@ class AppSettingsPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware {
     private lateinit var activity: Activity
 
     /// Private method to open device settings window
-    private fun openSettings(url: String, asAnotherTask: Boolean = false) {
+    private fun openSettings(url: String, asAnotherTask: Boolean = false, uri: Uri? = null) {
         try {
-            val intent = Intent(url)
+            val intent = if (uri != null) Intent(url, uri) else Intent(url)
             if (asAnotherTask) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             this.activity.startActivity(intent)
         } catch (e: Exception) {
@@ -112,19 +112,17 @@ class AppSettingsPlugin() : MethodCallHandler, FlutterPlugin, ActivityAware {
         } else if (call.method == "battery_optimization") {
             openSettings(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS, asAnotherTask)
         } else if (call.method == "vpn") {
-            if(Build.VERSION.SDK_INT >= 24) {
+            if (Build.VERSION.SDK_INT >= 24) {
                 openSettings(Settings.ACTION_VPN_SETTINGS, asAnotherTask)
-            }else{
+            } else {
                 openSettings("android.net.vpn.SETTINGS", asAnotherTask)
             }
         } else if (call.method == "app_settings") {
             openAppSettings(asAnotherTask)
-        }
-        else if (call.method == "device_settings") {
+        } else if (call.method == "device_settings") {
             openSettings(Settings.ACTION_SETTINGS, asAnotherTask)
-        }
-        else if (call.method == "system_alert_settings") {
-            openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, asAnotherTask)
+        } else if (call.method == "system_alert_settings") {
+            openSettings(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, asAnotherTask, uri = Uri.parse("package:" + this.activity.packageName))
         }
     }
 }
